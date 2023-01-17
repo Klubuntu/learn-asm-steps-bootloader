@@ -7,5 +7,6 @@
 ### Cała Playlista (z procesu tworzenia): Znajdziesz, obok 📌, na dole strony
 
 📌 **[Playlist/a]** https://www.youtube.com/watch?v=kbAJZ-iPBEM&list=PL8qG7adReCEAT9HgaQlhWK4WxN-dj2_CV
+📙 **[Book/Książka (.pdf)]** http://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf
 
 
