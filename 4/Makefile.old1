@@ -1,0 +1,13 @@
+# Build the kernel object file
+kernel.o : kernel/kernel.c
+	gcc -m32 -ffreestanding -c kernel/kernel.c -o kernel/kernel.o
+
+# Build the kernel entry object file
+kernel_entry.o : kernel/kernel_entry.asm
+	nasm kernel/kernel_entry.asm -f elf -o kernel/kernel_entry.o
+
+# Build the kernel binary
+kernel.bin: kernel/kernel_entry.o kernel/kernel.o
+	gcc -m32 -o kernel.bin -ffreestanding -nostdlib kernel/kernel_entry.o kernel/kernel.o
+
+

@@ -1,0 +1,39 @@
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h)
+
+OBJ = ${C_SOURCES:.c=.o}
+
+# Default make target.
+# all : kernel.bin
+all : os-image
+
+run: all
+	qemu-system-x86_64: -drive file=os-image.bin,format=raw
+
+os-image: kernel/boot_sect.bin kernel/kernel.bin
+	cat $^ > os-image.bin
+
+# $^ is substituted with all of the target ’s dependancy files
+kernel/kernel.bin : kernel/kernel_entry.o kernel/kernel.o
+	gcc -m32 -o kernel/kernel.bin -ffreestanding -nostdlib $^
+
+%.o: %.c ${HEADERS}
+		gcc -m32 -ffreestanding -c $< -o $@
+
+# Same as the above rule .
+kernel_entry.o : kernel_entry.asm
+	nasm kernel/$< -f elf -o kernel/$@
+
+# Assemble boot sector to machine code
+# The -I options tells nasm where to find our useful assembly
+# routines that we include in boot_sect.asm
+boot_sect.bin: boot_sect.asm
+	nasm kernel/$< -f bin -I '../../16bit/' -o kernel/$@
+
+clean:
+	rm *.bin *.o
+	rm -fr kernel/*.o boot/*.bin drivers/*.o
+
+# Dissamble kernel - Only for Debugging
+kernel/kernel.dis: kernel/kernel.bin
+	ndissam -b 32 $< > $@
